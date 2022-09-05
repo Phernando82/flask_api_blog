@@ -1,2 +1,2 @@
-python inicializar_banco_de_dados
+python estrutura_banco_dados
 web: gunicorn app:app
