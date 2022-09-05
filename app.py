@@ -4,7 +4,7 @@ import json
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-# Rota padrão - GET https://localhost:5000
+# Rota padrão - GET http://localhost:5000
 
 
 
@@ -56,7 +56,7 @@ def obter_postagens(autor):
         list_postagens.append(postagem_atual)
     return jsonify({'postagens': list_postagens})
 
-# Obter postagem por id - GET https://localhost:5000/postagem/1
+# Obter postagem por id - GET http://localhost:5000/postagem/1
 
 
 @app.route('/postagem/<int:id_postagem>', methods=['GET'])
@@ -72,7 +72,7 @@ def obter_postagem_por_indice(autor, id_postagem):
 
     return jsonify({'postagens': postagem_atual})
 
-# Criar uma nova postagem - POST https://localhost:5000/postagem
+# Criar uma nova postagem - POST http://localhost:5000/postagem
 
 
 @app.route('/postagem', methods=['POST'])
@@ -87,7 +87,7 @@ def nova_postagem(autor):
 
     return jsonify({'mensagem': 'Postagem criada com sucesso'})
 
-# Alterar uma postagem existente - PUT https://localhost:5000/postagem/1
+# Alterar uma postagem existente - PUT http://localhost:5000/postagem/1
 
 
 @app.route('/postagem/<int:id_postagem>', methods=['PUT'])
@@ -107,7 +107,7 @@ def alterar_postagem(autor, id_postagem):
     db.session.commit()
     return jsonify({'mensagem': 'Postagem alterada com sucessso'})
 
-# Excluir uma postagem - DELETE - https://localhost:5000/postagem/1
+# Excluir uma postagem - DELETE - http://localhost:5000/postagem/1
 
 
 @app.route('/postagem/<int:id_postagem>', methods=['DELETE'])
