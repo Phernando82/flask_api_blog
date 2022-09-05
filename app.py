@@ -1,12 +1,11 @@
 from flask import Flask, jsonify, request, make_response
-from estrutura_banco_dados import Autor, Postagem, app, db
+from estrutura_banco_dados_alchemy import Autor, Postagem, app, db
 import json
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
-
-
 # Rota padrão - GET https://localhost:5000
+
 
 
 def token_obrigatorio(f):
@@ -20,13 +19,12 @@ def token_obrigatorio(f):
             return jsonify({'mensagem': 'Token não foi incluído!'}, 401)
         # Se temos um token, validar acesso consultando o BD
         try:
-            resultado = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            resultado = jwt.decode(token,app.config['SECRET_KEY'],algorithms=["HS256"])
             autor = Autor.query.filter_by(
                 id_autor=resultado['id_autor']).first()
         except:
             return jsonify({'mensagem': 'Token é inválido'}, 401)
         return f(autor, *args, **kwargs)
-
     return decorated
 
 
@@ -41,11 +39,11 @@ def login():
     if auth.password == usuario.senha:
         token = jwt.encode({'id_autor': usuario.id_autor, 'exp': datetime.utcnow(
         ) + timedelta(minutes=30)}, app.config['SECRET_KEY'])
-        return jsonify({'token': token})
+        return jsonify({'token':token})
     return make_response('Login inválido', 401, {'WWW-Authenticate': 'Basic realm="Login obrigatório"'})
 
 
-@app.route('/postagem')
+@app.route('/postagem')  
 @token_obrigatorio
 def obter_postagens(autor):
     postagens = Postagem.query.all()
@@ -57,7 +55,6 @@ def obter_postagens(autor):
         postagem_atual['id_autor'] = postagem.id_autor
         list_postagens.append(postagem_atual)
     return jsonify({'postagens': list_postagens})
-
 
 # Obter postagem por id - GET https://localhost:5000/postagem/1
 
@@ -75,7 +72,6 @@ def obter_postagem_por_indice(autor, id_postagem):
 
     return jsonify({'postagens': postagem_atual})
 
-
 # Criar uma nova postagem - POST https://localhost:5000/postagem
 
 
@@ -90,7 +86,6 @@ def nova_postagem(autor):
     db.session.commit()
 
     return jsonify({'mensagem': 'Postagem criada com sucesso'})
-
 
 # Alterar uma postagem existente - PUT https://localhost:5000/postagem/1
 
@@ -111,7 +106,6 @@ def alterar_postagem(autor, id_postagem):
 
     db.session.commit()
     return jsonify({'mensagem': 'Postagem alterada com sucessso'})
-
 
 # Excluir uma postagem - DELETE - https://localhost:5000/postagem/1
 
@@ -157,7 +151,6 @@ def obter_autor_por_id(autor, id_autor):
 
     return jsonify({'autor': autor_atual})
 
-
 # Criar novo autor
 
 
@@ -175,7 +168,7 @@ def novo_autor(autor):
     return jsonify({'mensagem': 'Usuário criado com sucesso'}, 200)
 
 
-@app.route('/autores/<int:id_autor>', methods=['PUT'])
+@ app.route('/autores/<int:id_autor>', methods=['PUT'])
 @token_obrigatorio
 def alterar_autor(autor, id_autor):
     usuario_a_alterar = request.get_json()
@@ -199,7 +192,7 @@ def alterar_autor(autor, id_autor):
     return jsonify({'mensagem': 'Usuário alterado com sucesso!'})
 
 
-@app.route('/autores/<int:id_autor>', methods=['DELETE'])
+@ app.route('/autores/<int:id_autor>', methods=['DELETE'])
 @token_obrigatorio
 def excluir_autor(autor, id_autor):
     autor_existente = Autor.query.filter_by(id_autor=id_autor).first()
@@ -211,5 +204,4 @@ def excluir_autor(autor, id_autor):
     return jsonify({'mensagem': 'Autor excluído com sucesso!'})
 
 
-if __name__ == '__main_-':
-    app.run(port=5000, host='localhost', debug=True)
+app.run(port=5000, host='localhost', debug=True)
