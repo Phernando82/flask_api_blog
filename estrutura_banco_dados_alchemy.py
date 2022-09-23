@@ -38,9 +38,9 @@ def inicializar_banco():
     db.session.add(autor)
     db.session.commit()
 
-# postagem = Postagem(titulo='Uma nova postagem', id_autor=1)
-# db.session.add(postagem)
-# db.session.commit()
+postagem = Postagem(titulo='Uma nova postagem', id_autor=1)
+db.session.add(postagem)
+db.session.commit()
 
 
 if __name__ == "__main__":
