@@ -37,10 +37,10 @@ def inicializar_banco():
     autor = Autor(nome='Fernando', email='fernandoperesvalverde@gmail.com', senha='Hermes82wars!', admin=True)
     db.session.add(autor)
     db.session.commit()
-
-postagem = Postagem(titulo='Uma nova postagem', id_autor=1)
-db.session.add(postagem)
-db.session.commit()
+    # Criar postagem
+    postagem = Postagem(titulo='Uma nova postagem', id_autor=1)
+    db.session.add(postagem)
+    db.session.commit()
 
 
 if __name__ == "__main__":
